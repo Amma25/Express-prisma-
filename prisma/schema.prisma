@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        Int         @id @default(autoincrement())
+  firstname String
+  lastname  String
+  email     String
+  phone     String
+  address   String
+  Reservation Reservation[]
+}
+
+model Room {
+  id       Int      @id @default(autoincrement())
+  roomtype String
+  rate     String
+  Status   String
+  Reservation Reservation[]
+}
+
+model Reservation {
+  id         Int       @id @default(autoincrement())
+  checkIn    DateTime
+  checkOut   DateTime
+  status     status
+  Customer   Customer  @relation(fields: [Customer_id], references: [id])
+  Customer_id Int
+  Room       Room      @relation(fields: [Room_id], references: [id])
+  Room_id    Int
+}
+
+enum status {
+  Confirmed
+  Cancelled
+  Pending
+}
